@@ -11,17 +11,23 @@ function Dashboard() {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        fetch("http://localhost:5000/api/dashboard")
-            .then(function (res) {
-                return res.json();
-            })
-            .then(function (data) {
-                setUser(data);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    }, []);
+    const token = localStorage.getItem("token");
+
+    fetch("http://localhost:5000/api/dashboard", {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+        .then(function (res) {
+            return res.json();
+        })
+        .then(function (data) {
+            setUser(data);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}, []);
 
     if (!user) return <p>Loading... </p>;
 

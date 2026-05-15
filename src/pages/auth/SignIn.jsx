@@ -104,6 +104,12 @@ function SignIn() {
       </div>
 
       <div className="authContainer">
+        <div className="mobile-auth-logo">
+          <img src={logoImg} alt="FitGenie Logo" />
+          <span>
+            Fit<span>Genie</span>
+          </span>
+        </div>
         <h3>Welcome back</h3>
         <p className="subtitle">Sign in to continue your fitness journey</p>
 

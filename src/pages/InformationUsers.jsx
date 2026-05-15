@@ -45,14 +45,14 @@ export default function InformationUsers() {
 
     try {
       const token = localStorage.getItem("token");
-
-      await fetch("http://localhost:5000/api/user-information", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
+await fetch("http://localhost:5000/api/user-information", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  },
+  body: JSON.stringify(userData),
+});
 
       const response = await fetch("http://localhost:5000/api/plans", {
         method: "POST",

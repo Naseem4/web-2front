@@ -32,13 +32,16 @@ function SignUp() {
       const result = await signInWithPopup(auth, provider);
       const token = await result.user.getIdToken();
 
-      const response = await fetch("http://localhost:5000/api/auth/google", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+      const response = await fetch(
+        "http://localhost:5000/api/firebase-auth/google",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         },
-      });
+      );
 
       const data = await response.json();
 
@@ -85,8 +88,8 @@ function SignUp() {
             Transform Your <br /> <span>Fitness Journey</span>
           </h2>
           <p>
-            AI-powered workout plans, personalized nutrition guides, and progress
-            tracking — all tailored to your goals.
+            AI-powered workout plans, personalized nutrition guides, and
+            progress tracking — all tailored to your goals.
           </p>
           <div className="statusContainer">
             <p className="numOfUsers">
@@ -102,13 +105,23 @@ function SignUp() {
       </div>
 
       <div className="authContainer">
+        <div className="mobile-auth-logo">
+  <img src={logoImg} alt="FitGenie Logo" />
+  <span>
+    Fit<span>Genie</span>
+  </span>
+</div>
         <h3>Create your account</h3>
         <p className="subtitle">Start your fitness transformation today</p>
 
         {!isFirebaseConfigured && (
-          <p className="subtitle" style={{ color: "#ffb020", marginBottom: 12 }}>
-            Firebase env vars are missing — copy your Adam `.env` keys here (REACT_APP_* or
-            VITE_FIREBASE_*), then restart <code style={{ color: "#fff" }}>npm run dev</code>.
+          <p
+            className="subtitle"
+            style={{ color: "#ffb020", marginBottom: 12 }}
+          >
+            Firebase env vars are missing — copy your Adam `.env` keys here
+            (REACT_APP_* or VITE_FIREBASE_*), then restart{" "}
+            <code style={{ color: "#fff" }}>npm run dev</code>.
           </p>
         )}
 
