@@ -6,11 +6,17 @@ function SleepCard({ data }) {
                 <span>🌙</span>
 
             </div>
-            <h2 style={{
-                fontSize: '32px',
-                margin: '10px 0'
-            }}>{data[0].value}h <span style={{fontSize: '16px'}}>{data[1].value}m</span>
-            </h2>
+            <h2
+  style={{
+    fontSize: '32px',
+    margin: '10px 0'
+  }}
+>
+  {data?.[0]?.value ?? 0}h{" "}
+  <span style={{ fontSize: '16px' }}>
+    {data?.[1]?.value ?? 0}m
+  </span>
+</h2>
             <div style={{
                 width: '100%',
                 height: '8px',
@@ -18,7 +24,7 @@ function SleepCard({ data }) {
                 borderRadius: '10px'
             }}>
                 <div style={{
-                    width: `${(data[0].value/10)*100}%`,
+                    width: `${(data?.[0]?.value ?? 0)/10*100}%`,
                     height: '100%',
                     background: '#a855f7',
                     borderRadius: '10px'

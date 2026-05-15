@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import type { Offer } from "../types/offer";
 import { offers as staticOffers } from "../data/offers";
 import "./OffersPage.css";
+
 
 type Screen = "choose" | "diet" | "training" | "confirm";
 
@@ -74,6 +76,7 @@ const getApiErrorMessage = async (response: Response) => {
 };
 
 function OffersPage() {
+  const navigate = useNavigate();
   const [offers, setOffers] = useState<Offer[]>([]);
   const [offersLoading, setOffersLoading] = useState(true);
   const [selected, setSelected] = useState<number | null>(3);
@@ -91,27 +94,35 @@ function OffersPage() {
     { key: "guidance", label: "Exercise Guidance", description: "Clear instructions for every workout.", checked: true },
     { key: "support", label: "Priority Support", description: "Faster response and extra support.", checked: false },
   ]);
-
+    
   useEffect(() => {
-    const fetchOffers = async () => {
-      try {
-        const res = await fetch(OFFERS_API);
-        if (!res.ok) throw new Error("API error");
-        const json = await res.json();
+  const fetchOffers = async () => {
+    try {
+      const res = await fetch(OFFERS_API);
+
+      if (!res.ok) throw new Error("API error");
+
+      const json = await res.json();
+
+      if (json.data && json.data.length > 0) {
         setOffers(json.data);
-      } catch {
-        /**
-         * @fallback static data
-         * If the backend is offline or unreachable,
-         * fall back to the local static offers so the page still renders.
-         */
+      } else {
         setOffers(staticOffers);
-      } finally {
-        setOffersLoading(false);
       }
-    };
-    fetchOffers();
-  }, []);
+    } catch {
+      /**
+       * @fallback static data
+       * If the backend is offline or unreachable,
+       * fall back to the local static offers so the page still renders.
+       */
+      setOffers(staticOffers);
+    } finally {
+      setOffersLoading(false);
+    }
+  };
+
+  fetchOffers();
+}, []);
 
   const selectedOffer = offers.find((offer) => offer.id === selected);
   const selectedAddons = customOptions.filter((option) => option.checked);
@@ -126,7 +137,9 @@ function OffersPage() {
 
   const validateChooseStep = () => {
     const errors: FieldErrors = {};
-    if (!selected || !selectedOffer) errors.selected = "Please choose a plan.";
+    if (!selected) {
+  errors.selected = "Please choose a plan.";
+}
     if (selectedAddons.length === 0) errors.addons = "Please select at least one add-on.";
     setFieldErrors(errors);
     return Object.keys(errors).length === 0;
@@ -142,7 +155,7 @@ function OffersPage() {
     setFieldErrors(errors);
     return Object.keys(errors).length === 0;
   };
-
+  
   const validateTrainingStep = () => {
     const errors: FieldErrors = {};
     const workoutDays = Number(form.workoutDays);
@@ -153,7 +166,7 @@ function OffersPage() {
   };
 
   const buildPayload = (): SubmissionPayload | null => {
-    if (!selected || !selectedOffer || selectedAddons.length === 0) return null;
+    if (!selected || selectedAddons.length === 0) return null;
     const selectedAddonsPayload = customOptions.filter((o) => o.checked).map((o) => o.key);
     const payload: SubmissionPayload = { offerId: selected, mainGoal: selectedGoal, selectedAddons: selectedAddonsPayload };
     if (hasAddon("meal")) {
@@ -446,7 +459,13 @@ function OffersPage() {
                 <div className="summary-row"><span className="summary-key">Workout Days</span><span className="summary-val">{form.workoutDays} days/week</span></div></>
               )}
             </div>
-            <button type="button" className="main-button" onClick={handleReset}>Start Over</button>
+            <button
+  type="button"
+  className="main-button"
+  onClick={() => navigate("/payment")}
+>
+  Start Over
+</button>
           </div>
         )}
       </div>

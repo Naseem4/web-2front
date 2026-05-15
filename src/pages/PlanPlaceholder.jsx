@@ -1,16 +1,48 @@
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 export default function PlanPlaceholder() {
+  const [plan, setPlan] = useState(null);
+
+  useEffect(() => {
+    const savedPlan = localStorage.getItem("generatedPlan");
+    if (savedPlan) {
+      setPlan(JSON.parse(savedPlan));
+    }
+  }, []);
+
+  if (!plan) {
+    return (
+      <div className="min-h-screen bg-[#050907] text-white flex items-center justify-center">
+        <h1 className="text-3xl font-bold">No Plan Generated Yet</h1>
+      </div>
+    );
+  }
+
+  const planData = plan.data;
+
   return (
-    <div className="min-h-screen bg-[#050907] px-6 py-16 text-center text-white">
-      <h1 className="text-2xl font-bold text-lime-400">Plan</h1>
-      <p className="mt-4 text-gray-400">
-        This route is used after generating a plan from the information page when the
-        backend is connected or when running in local fallback mode.
+    <div className="min-h-screen bg-[#050907] px-8 py-10 text-white">
+      <h1 className="mb-2 text-4xl font-extrabold text-lime-400">
+        Your Fitness Plan
+      </h1>
+
+      <p className="mb-8 text-gray-400">
+        Goal: {planData.goal} | Workout Days: {planData.workoutDays}
       </p>
-      <Link to="/information" className="mt-8 inline-block text-lime-400 underline">
-        Back to information
-      </Link>
+
+      <div className="grid gap-5 md:grid-cols-2">
+        {planData.workoutPlan?.map((workout, index) => (
+          <div
+            key={index}
+            className="rounded-3xl border border-gray-800 bg-[#101512] p-6 shadow-xl"
+          >
+            <p className="mb-2 text-sm font-bold text-lime-400">
+              Day {index + 1}
+            </p>
+            <h2 className="text-2xl font-extrabold">{workout}</h2>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

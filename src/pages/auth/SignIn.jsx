@@ -22,43 +22,45 @@ function SignIn() {
   };
 
   const handleGoogleSignIn = async () => {
-    if (!isFirebaseConfigured || !auth || !provider) {
-      window.alert(
-        "Firebase is not configured. Add keys to `.env` — use VITE_FIREBASE_* or the same REACT_APP_* names as the Adam branch (see README), then restart the dev server.",
-      );
+  if (!isFirebaseConfigured || !auth || !provider) {
+    window.alert(
+      "Firebase is not configured. Add keys to `.env` and restart the dev server.",
+    );
+    return;
+  }
+
+  try {
+    // Firebase login
+    const result = await signInWithPopup(auth, provider);
+
+    // Firebase token
+    const firebaseToken = await result.user.getIdToken();
+
+    // Send token to backend
+    const response = await fetch("http://localhost:5000/api/auth/google", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${firebaseToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error("Backend error:", data.error);
       return;
     }
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const token = await result.user.getIdToken();
 
-      const response = await fetch("http://localhost:5000/api/auth/google", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+    // Save backend JWT token
+    localStorage.setItem("user", JSON.stringify(data.user));
+    localStorage.setItem("token", data.token);
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        console.error("Backend error:", data.error);
-        return;
-      }
-
-      localStorage.setItem("user", JSON.stringify(data.user));
-      localStorage.setItem("token", token);
-
-      if (data.user.role === "admin") {
-        navigate("/");
-      } else {
-        navigate("/");
-      }
-    } catch (error) {
-      console.error("Error signing in:", error.message);
-    }
-  };
+    navigate("/");
+  } catch (error) {
+    console.error("Error signing in:", error.message);
+  }
+};
 
   return (
     <div className="fitgenie-auth-page">
