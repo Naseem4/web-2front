@@ -27,45 +27,52 @@ export default function InformationUsers() {
   ];
 
   const handleGenerate = async () => {
-    const userData = {
-      weight,
-      height,
-      age,
-      gender,
-      goal,
-      days,
-    };
+  const userData = {
+  weight: Number(weight),
+  height: Number(height),
+  age: Number(age),
+  gender,
+  goal,
+  days: Number(days),
+};
 
-    localStorage.setItem("userInfo", JSON.stringify(userData));
+  localStorage.setItem("userInfo", JSON.stringify(userData));
 
-    try {
-      const token = localStorage.getItem("token");
+  try {
+    const token = localStorage.getItem("token");
 
-      const response = await fetch("http://localhost:5000/api/plan", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(userData),
-      });
+    // 1) Save user information
+    await fetch("http://localhost:5000/api/user-information", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
 
-      if (!response.ok) {
-        throw new Error("Failed to generate plan");
-      }
+    // 2) Generate plan
+    const response = await fetch("http://localhost:5000/api/plans", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(userData),
+    });
 
-      const data = await response.json();
-
-      localStorage.setItem("generatedPlan", JSON.stringify(data));
-
-      window.location.pathname = "/plan";
-    } catch (error) {
-      console.error(error);
-      alert("Backend is not connected yet, data saved locally.");
-
-      window.location.pathname = "/plan";
+    if (!response.ok) {
+      throw new Error("Failed to generate plan");
     }
-  };
+
+    const data = await response.json();
+
+    localStorage.setItem("generatedPlan", JSON.stringify(data));
+    window.location.pathname = "/plan";
+  } catch (error) {
+    console.error(error);
+    alert("Something went wrong. Data may be saved but plan was not generated.");
+  }
+};
 
   return (
     <div className="min-h-screen bg-[#050907] text-white">
