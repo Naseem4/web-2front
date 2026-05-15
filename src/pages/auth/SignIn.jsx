@@ -32,7 +32,7 @@ function SignIn() {
       const result = await signInWithPopup(auth, provider);
       const token = await result.user.getIdToken();
 
-      const response = await fetch("http://localhost:5000/api/auth/google", {
+      const response = await fetch("http://localhost:5000/api/firebase-auth/google", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -102,6 +102,12 @@ function SignIn() {
       </div>
 
       <div className="authContainer">
+        <div className="mobile-auth-logo">
+          <img src={logoImg} alt="FitGenie Logo" />
+          <span>
+            Fit<span>Genie</span>
+          </span>
+        </div>
         <h3>Welcome back</h3>
         <p className="subtitle">Sign in to continue your fitness journey</p>
 

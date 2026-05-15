@@ -23,56 +23,63 @@ export default function InformationUsers() {
   const goals = [
     { title: "Weight Loss", desc: "Burn fat and get lean", icon: Flame },
     { title: "Muscle Gain", desc: "Build strength and mass", icon: TrendingUp },
-    { title: "General Fitness", desc: "Improve overall health", icon: Activity },
+    {
+      title: "General Fitness",
+      desc: "Improve overall health",
+      icon: Activity,
+    },
   ];
 
   const handleGenerate = async () => {
-  const userData = {
-  weight: Number(weight),
-  height: Number(height),
-  age: Number(age),
-  gender,
-  goal,
-  days: Number(days),
-};
+    const userData = {
+      weight: Number(weight),
+      height: Number(height),
+      age: Number(age),
+      gender,
+      goal,
+      days: Number(days),
+    };
 
-  localStorage.setItem("userInfo", JSON.stringify(userData));
+    localStorage.setItem("userInfo", JSON.stringify(userData));
 
-  try {
-    const token = localStorage.getItem("token");
+    try {
+      const token = localStorage.getItem("token");
 
-    // 1) Save user information
-    await fetch("http://localhost:5000/api/user-information", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    });
+      // 1) Save user information
+      await fetch("http://localhost:5000/api/user-information", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(userData),
+      });
 
-    // 2) Generate plan
-    const response = await fetch("http://localhost:5000/api/plans", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(userData),
-    });
+      // 2) Generate plan
+      const response = await fetch("http://localhost:5000/api/plans", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(userData),
+      });
 
-    if (!response.ok) {
-      throw new Error("Failed to generate plan");
+      if (!response.ok) {
+        throw new Error("Failed to generate plan");
+      }
+
+      const data = await response.json();
+
+      localStorage.setItem("generatedPlan", JSON.stringify(data));
+      window.location.pathname = "/plan";
+    } catch (error) {
+      console.error(error);
+      alert(
+        "Something went wrong. Data may be saved but plan was not generated.",
+      );
     }
-
-    const data = await response.json();
-
-    localStorage.setItem("generatedPlan", JSON.stringify(data));
-    window.location.pathname = "/plan";
-  } catch (error) {
-    console.error(error);
-    alert("Something went wrong. Data may be saved but plan was not generated.");
-  }
-};
+  };
 
   return (
     <div className="min-h-screen bg-[#050907] text-white">
@@ -244,7 +251,9 @@ function Input({ label, value, setValue, placeholder, unit }) {
           placeholder={placeholder}
           className="w-full bg-transparent text-white outline-none placeholder:text-gray-500"
         />
-        {unit && <span className="text-sm font-bold text-gray-400">{unit}</span>}
+        {unit && (
+          <span className="text-sm font-bold text-gray-400">{unit}</span>
+        )}
       </div>
     </div>
   );

@@ -17,6 +17,10 @@
   box-sizing: border-box;
 }
 
+/* =========================
+   LEFT HERO SECTION
+========================= */
+
 .fitgenie-auth-page .heroWrapper {
   position: absolute;
   width: min(740px, 46vw);
@@ -115,6 +119,10 @@
   color: #fafafa;
 }
 
+/* =========================
+   AUTH FORM
+========================= */
+
 .fitgenie-auth-page .authContainer {
   position: absolute;
   left: min(740px, 46vw);
@@ -203,39 +211,136 @@
   transition: 0.3s;
 }
 
+/* =========================
+   MOBILE LOGO
+========================= */
+
+.fitgenie-auth-page .mobile-auth-logo {
+  display: none;
+}
+
+/* =========================
+   TABLET & MOBILE
+========================= */
+
 @media (max-width: 960px) {
-  .fitgenie-auth-page .heroWrapper {
-    position: relative;
-    width: 100%;
-    height: 260px;
-    min-height: 220px;
+  .fitgenie-auth-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 0 16px;
   }
 
-  .fitgenie-auth-page .hero {
-    height: 100%;
-    min-height: 220px;
-  }
-
-  .fitgenie-auth-page .auth-page-header {
-    top: 48px;
-    left: 16px;
-  }
-
+  /* hide desktop hero */
+  .fitgenie-auth-page .heroWrapper,
+  .fitgenie-auth-page .statusContainer,
+  .fitgenie-auth-page .auth-page-header,
   .fitgenie-auth-page .auth-hero-section {
-    position: relative;
-    top: auto;
-    left: auto;
-    bottom: auto;
-    max-width: none;
-    padding: 24px 20px 0;
+    display: none !important;
   }
 
+  /* mobile logo */
+  .fitgenie-auth-page .mobile-auth-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+  }
+
+  .fitgenie-auth-page .mobile-auth-logo img {
+    width: 120px;
+    height: auto;
+  }
+
+  .fitgenie-auth-page .mobile-auth-logo > span {
+    margin-top: 10px;
+    font-size: 42px;
+    color: #fafafa;
+    font-weight: 500;
+  }
+
+  .fitgenie-auth-page .mobile-auth-logo > span span {
+    color: #86d411;
+  }
+
+  /* form */
   .fitgenie-auth-page .authContainer {
-    position: relative;
+    position: static !important;
     left: auto;
     right: auto;
     top: auto;
-    transform: none;
-    padding: 32px 20px 48px;
+    transform: none !important;
+
+    width: 100%;
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding: 40px 0 120px;
+    text-align: center;
+  }
+
+  .fitgenie-auth-page .authContainer h3 {
+    font-size: 32px !important;
+    margin-bottom: 12px;
+  }
+
+  .fitgenie-auth-page .subtitle {
+    font-size: 15px !important;
+    margin-bottom: 30px;
+  }
+
+  .fitgenie-auth-page .googleBtn {
+    width: 100%;
+    max-width: 420px;
+    height: 56px;
+    font-size: 15px;
+    border-radius: 50px;
+  }
+
+  .fitgenie-auth-page .signinText {
+    margin-top: 24px;
+    font-size: 14px;
+  }
+
+  .fitgenie-auth-page .termsText {
+    font-size: 13px;
+    line-height: 1.6;
+  }
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 600px) {
+  .fitgenie-auth-page .mobile-auth-logo img {
+    width: 95px;
+  }
+
+  .fitgenie-auth-page .mobile-auth-logo > span {
+    font-size: 34px;
+  }
+
+  .fitgenie-auth-page .authContainer h3 {
+    font-size: 26px !important;
+  }
+
+  .fitgenie-auth-page .subtitle {
+    font-size: 14px !important;
+  }
+
+  .fitgenie-auth-page .googleBtn {
+    height: 52px;
+    font-size: 14px;
+  }
+
+  .fitgenie-auth-page .signinText,
+  .fitgenie-auth-page .termsText {
+    font-size: 12px !important;
   }
 }
